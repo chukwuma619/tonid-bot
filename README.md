@@ -52,6 +52,8 @@ The bot works in **direct messages** only. Use **/menu** for a persistent inline
 
    Copy `env.example` to `.env` at the repo root (or into each app that needs it). The Telegram bot reads the same env vars for TON, Redis, and AI; set `TELEGRAM_BOT_TOKEN` and optionally `TELEGRAM_WEBHOOK_URL` for webhook mode.
 
+   **TON setup:** The bot uses [Wallet V4R2](https://docs.ton.org/standard/wallets/v4) and [TonCenter API v2](https://docs.ton.org/ecosystem/api/toncenter). Set `TON_RPC_URL` to the API base (e.g. `https://toncenter.com/api/v2` for mainnet or `https://testnet.toncenter.com/api/v2` for testnet) and `TON_NETWORK` to `mainnet` or `testnet`. Optionally set `TON_API_KEY` to reduce rate limits. See [TON documentation](https://docs.ton.org) for more.
+
 3. **Run**
 
    - **Website (Next.js)**  
@@ -100,4 +102,4 @@ In DMs you can also use natural language (e.g. “What’s my balance?”, “Se
 - [Identity Hub — TON AI Hackathon](https://identityhub.app/contests/ai-hackathon)
 - [GrammY](https://grammy.dev) – bot framework
 - [Telegram Bot API](https://core.telegram.org/bots/api)
-- [TON Documentation](https://docs.ton.org)
+- [TON Documentation](https://docs.ton.org) — Wallet V4, [TonCenter API](https://docs.ton.org/ecosystem/api/toncenter), [SDKs](https://docs.ton.org/develop/dapps/apis/sdk)
