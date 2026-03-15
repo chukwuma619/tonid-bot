@@ -1,0 +1,24 @@
+{
+  "name": "@tonid-bot/telegram-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "build": "pnpm --filter @tonid-bot/shared build && tsc",
+    "lint": "echo 'Lint skipped (add eslint + typescript-eslint to run)'"
+  },
+  "dependencies": {
+    "@tonid-bot/shared": "workspace:*",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.0",
+    "grammy": "^1.34.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
