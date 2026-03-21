@@ -1,23 +1,39 @@
-/**
- * AI agent for natural-language TON wallet commands.
- * Stub: returns a short message. Wire up AI SDK + TON tools for production.
- */
-import type { AgentContext } from "./types.js";
+import { generateText, stepCountIs } from "ai";
+import { createAgentTools } from "./tools.js";
+import { buildSystemPrompt } from "./prompts.js";
 
 export type { AgentContext } from "./types.js";
+import type { AgentContext } from "./types.js";
 
-export async function runAgent(
-  userMessage: string,
-  _context?: AgentContext
-): Promise<string> {
-  // TODO: use AI SDK (generateText) with TON tools: get_balance, get_address_book,
-  // add_address_book_entry, remove_address_book_entry, prepare_transfer
-  const lower = userMessage.trim().toLowerCase();
-  if (lower.includes("balance") || lower.includes("how much")) {
-    return "Use **/balance** to see your TON balance, or **/address** to get your wallet address.";
+
+
+/**
+ * Natural-language TON wallet assistant (Vercel AI SDK + tool calling).
+ * Requires AI_GATEWAY_API_KEY (or provider env vars per your AI SDK setup).
+ */
+export async function runAgent(userMessage: string, context?: AgentContext): Promise<string> {
+  if (!process.env.AI_GATEWAY_API_KEY?.trim()) {
+    return (
+      "AI replies are not configured. Set **AI_GATEWAY_API_KEY** in your environment (see `env.example`), then restart the bot."
+    );
   }
-  if (lower.includes("send") || lower.includes("transfer")) {
-    return "Use **/menu** → Send, or say e.g. _Send 1 TON to &lt;address&gt;_ and I’ll help you confirm.";
+
+  const tools = createAgentTools(context);
+  const systemPrompt = buildSystemPrompt({ defaultAddress: context?.defaultAddress });
+
+  try {
+    const result = await generateText({
+      model: "anthropic/claude-sonnet-4",
+      system: systemPrompt,
+      prompt: userMessage,
+      tools,
+      stopWhen: stepCountIs(5),
+    });
+    const text = result.text?.trim();
+    if (text) return text;
+    return "_I ran the tools but got no text back. Try rephrasing or use /menu._";
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return `Something went wrong talking to the AI: ${msg}`;
   }
-  return "I’m your TON wallet assistant. Use **/menu** for Balance, Address, Send, History, and Settings. You can also ask things like “What’s my balance?” or “Send 1 TON to …”.";
 }

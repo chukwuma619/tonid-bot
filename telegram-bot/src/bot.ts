@@ -855,14 +855,26 @@ export function run(bot: Bot): void {
       return;
     }
 
-    // Fallback: AI agent
-    const agentContext: AgentContext = {
-      defaultAddress: account?.address ?? getState(userId).defaultAddress,
-      notifyUserId: userId,
-      notifyPlatform: PLATFORM,
-    };
+    // Fallback: AI agent (Vercel AI SDK + TON tools; same pending transfer flow as typed sends)
     await ctx.api.sendChatAction(ctx.chat!.id, "typing");
-    const reply = await runAgent(text, agentContext);
-    await ctx.reply(stripAnsi(reply), { parse_mode: "Markdown" });
+    try {
+      const agentContext: AgentContext = {
+        defaultAddress: account?.address ?? getState(userId).defaultAddress,
+        notifyUserId: userId,
+        notifyPlatform: PLATFORM,
+        onPrepareTransfer: (params) =>
+          setPendingTransfer(PLATFORM, userId, {
+            asset: "TON",
+            amountNano: params.amountNano,
+            amountTon: params.amountTon,
+            recipientAddress: params.recipientAddress,
+          }),
+      };
+      const reply = await runAgent(text, agentContext);
+      await ctx.reply(stripAnsi(reply), { parse_mode: "Markdown" });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      await ctx.reply(`Something went wrong: ${stripAnsi(msg)}`, { parse_mode: "Markdown" });
+    }
   });
 }
