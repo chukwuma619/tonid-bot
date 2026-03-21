@@ -1,4 +1,4 @@
-import { createTonClient, type TonClientStub } from "./ton-client";
+import { createTonClient, type TonClientStub } from "./ton-client.js";
 
 export function createTonClientFromEnv(): TonClientStub {
   return createTonClient();

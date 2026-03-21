@@ -1,5 +1,5 @@
-import { getRedisClient, redisKey } from "./redis";
-import type { PendingTransfer } from "./pending-transfer-store";
+import { getRedisClient, redisKey } from "./redis.js";
+import type { PendingTransfer } from "./pending-transfer-store.js";
 
 export type LastTransfer = Omit<PendingTransfer, "createdAt">;
 
