@@ -2,7 +2,7 @@
  * Scheduled reminders: "Remind me to send X TON every week". Notification-only (no auto-send).
  */
 
-import { getRedisClient, redisKey } from "./redis";
+import { getRedisClient, redisKey } from "./redis.js";
 
 export type ReminderInterval = "day" | "week" | "month";
 

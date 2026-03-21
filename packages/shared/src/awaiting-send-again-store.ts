@@ -1,4 +1,4 @@
-import { getRedisClient, redisKey } from "./redis";
+import { getRedisClient, redisKey } from "./redis.js";
 
 const KEY_PREFIX = "awaiting_send_again";
 
