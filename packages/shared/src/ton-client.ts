@@ -6,21 +6,27 @@
 import { Address } from "@ton/core";
 import { TonClient } from "@ton/ton";
 
-/** Base URL for TonCenter API v2 (e.g. https://toncenter.com/api/v2 or https://testnet.toncenter.com/api/v2). */
-function getTonApiBase(): string {
-  const url = process.env.TON_RPC_URL ?? "https://toncenter.com/api/v2/jsonRPC";
-  const base = url.replace(/\/jsonRPC\/?$/i, "");
-  if (process.env.TON_NETWORK === "testnet" && base.includes("toncenter.com") && !base.includes("testnet")) {
-    return base.replace("https://toncenter.com", "https://testnet.toncenter.com");
+function getTonEndpoint(): string {
+  let url = (process.env.TON_RPC_URL ?? "https://toncenter.com/api/v2/jsonRPC").trim().replace(/\/$/, "");
+
+  if (process.env.TON_NETWORK === "testnet" && url.includes("toncenter.com") && !url.includes("testnet")) {
+    url = url.replace("https://toncenter.com", "https://testnet.toncenter.com");
   }
-  return base;
+
+  if (!/\/jsonRPC$/i.test(url)) {
+    if (/\/api\/v2$/i.test(url)) {
+      url = `${url}/jsonRPC`;
+    }
+  }
+
+  return url;
 }
 
 let clientInstance: TonClient | null = null;
 
 function getTonClient(): TonClient {
   if (!clientInstance) {
-    const endpoint = getTonApiBase();
+    const endpoint = getTonEndpoint();
     clientInstance = new TonClient({
       endpoint,
       apiKey: process.env.TON_API_KEY,

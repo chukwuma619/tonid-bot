@@ -52,7 +52,7 @@ The bot works in **direct messages** only. Use **/menu** for a persistent inline
 
    Copy `env.example` to `.env` at the repo root (or into each app that needs it). The Telegram bot reads the same env vars for TON, Redis, and AI; set `TELEGRAM_BOT_TOKEN` and optionally `TELEGRAM_WEBHOOK_URL` for webhook mode.
 
-   **TON setup:** The bot uses [Wallet V4R2](https://docs.ton.org/standard/wallets/v4) and [TonCenter API v2](https://docs.ton.org/ecosystem/api/toncenter). Set `TON_RPC_URL` to the API base (e.g. `https://toncenter.com/api/v2` for mainnet or `https://testnet.toncenter.com/api/v2` for testnet) and `TON_NETWORK` to `mainnet` or `testnet`. Optionally set `TON_API_KEY` to reduce rate limits. See [TON documentation](https://docs.ton.org) for more.
+   **TON setup:** The bot uses [Wallet V4R2](https://docs.ton.org/standard/wallets/v4) and [TonCenter API v2](https://docs.ton.org/develop/dapps/apis/toncenter). Set `TON_RPC_URL` to the JSON-RPC endpoint (e.g. `https://toncenter.com/api/v2/jsonRPC` or `https://testnet.toncenter.com/api/v2/jsonRPC`), `TON_NETWORK` to `mainnet` or `testnet`, and optionally `TON_API_KEY` for rate limits.
 
 3. **Run**
 
