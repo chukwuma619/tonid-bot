@@ -67,7 +67,7 @@ The bot works in **direct messages** only. Use **/menu** for a persistent inline
      pnpm dev:bot
      ```
      Or from `telegram-bot`: `pnpm dev`.  
-     Without `TELEGRAM_WEBHOOK_URL`, the bot uses long polling. With it, run the bot behind HTTPS and set the webhook URL to a path the server actually serves: `https://your-domain.com/webhook` or `https://your-domain.com/api/webhooks/telegram` (both work).
+     Without `TELEGRAM_WEBHOOK_URL`, the bot uses long polling. With it, run the bot behind HTTPS and set the webhook URL (e.g. `https://your-domain.com/webhook`).
 
 ## Bot commands
 
