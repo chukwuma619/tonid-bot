@@ -22,7 +22,14 @@ if (webhookUrl) {
   });
   const app = express();
   app.use(express.json());
-  app.post("/webhook", webhookCallback(bot, "express", { secretToken: secretToken || undefined }));
+  const handleWebhook = webhookCallback(bot, "express", {
+    secretToken: secretToken || undefined,
+  });
+  app.post("/webhook", handleWebhook);
+  app.post("/api/webhooks/telegram", handleWebhook);
+  app.get("/", (_req, res) => {
+    res.status(200).send("ok");
+  });
   const port = Number(process.env.PORT) || 3001;
   app.listen(port, () => {
     console.log(`Webhook server listening on port ${port}`);
