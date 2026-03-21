@@ -2,7 +2,7 @@
  * Stores last-known TON balance per user for deposit notification (optional).
  */
 
-import { getRedisClient, redisKey } from "./redis.js";
+import { getRedisClient, redisKey } from "./redis";
 
 function key(platform: string, userId: string): string {
   return redisKey(["last_balance", platform, userId]);

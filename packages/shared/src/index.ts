@@ -1,19 +1,19 @@
-export { getRedisClient, redisKey } from "./redis.js";
+export { getRedisClient, redisKey } from "./redis";
 export {
   getAccount,
   setAccount,
   listAccountUserIds,
   type StoredAccount,
-} from "./account-store.js";
-export { getLastBalance, setLastBalance, type LastBalance } from "./deposit-notification-store.js";
-export { createTonClientFromEnv, getTonBalance, formatTonFromNano } from "./balance.js";
+} from "./account-store";
+export { getLastBalance, setLastBalance, type LastBalance } from "./deposit-notification-store";
+export { createTonClientFromEnv, getTonBalance, formatTonFromNano } from "./balance";
 export {
   hasPin,
   setPin,
   verifyPin,
   looksLikePin,
   clearPin,
-} from "./pin-store.js";
+} from "./pin-store";
 export {
   getAwaitingPin,
   setAwaitingPin,
@@ -22,27 +22,27 @@ export {
   MAX_PIN_ATTEMPTS,
   type AwaitingPinState,
   type AwaitingPinReason,
-} from "./awaiting-pin-store.js";
+} from "./awaiting-pin-store";
 export {
   getPendingTransfer,
   setPendingTransfer,
   clearPendingTransfer,
   isPendingTonTransfer,
   type PendingTransfer,
-} from "./pending-transfer-store.js";
+} from "./pending-transfer-store";
 export {
   getAddressBook,
   getAddressByLabel,
   addAddress,
   removeAddress,
   type AddressBookEntry,
-} from "./address-book-store.js";
+} from "./address-book-store";
 export {
   addTransaction,
   buildHistoryEntry,
   getTransactionHistory,
   type TransactionHistoryEntry,
-} from "./transaction-history-store.js";
+} from "./transaction-history-store";
 export {
   getSpendingLimits,
   setSpendingLimits,
@@ -56,18 +56,18 @@ export {
   isAboveLargeSendThreshold,
   type SpendingLimits,
   type CheckSpendingLimitsInput,
-} from "./spending-limits-store.js";
+} from "./spending-limits-store";
 export {
   getLastTransfer,
   setLastTransfer,
   type LastTransfer,
-} from "./last-transfer-store.js";
+} from "./last-transfer-store";
 export {
   getAwaitingSendAgain,
   setAwaitingSendAgain,
   clearAwaitingSendAgain,
   type AwaitingSendAgain,
-} from "./awaiting-send-again-store.js";
+} from "./awaiting-send-again-store";
 export {
   addReminder,
   getReminders,
@@ -77,11 +77,11 @@ export {
   advanceReminderNextRun,
   type Reminder,
   type ReminderInterval,
-} from "./reminder-store.js";
+} from "./reminder-store";
 export {
   executeTransfer,
   waitForTransactionConfirmation,
-} from "./execute-transfer.js";
-export { createAccount, type CreateAccountResult } from "./create-account.js";
-export { runAgent, type AgentContext } from "./agent/index.js";
-export { stripAnsi } from "./strip-ansi.js";
+} from "./execute-transfer";
+export { createAccount, type CreateAccountResult } from "./create-account";
+export { runAgent, type AgentContext } from "./agent";
+export { stripAnsi } from "./strip-ansi";

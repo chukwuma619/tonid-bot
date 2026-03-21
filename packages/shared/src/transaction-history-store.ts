@@ -2,8 +2,8 @@
  * Redis-backed transaction history per user (outgoing TON sends).
  */
 
-import { getRedisClient, redisKey } from "./redis.js";
-import type { PendingTransfer } from "./pending-transfer-store.js";
+import { getRedisClient, redisKey } from "./redis";
+import type { PendingTransfer } from "./pending-transfer-store";
 
 export type TransactionHistoryEntry = {
   txHash: string;

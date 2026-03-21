@@ -2,9 +2,9 @@
  * AI agent for natural-language TON wallet commands.
  * Stub: returns a short message. Wire up AI SDK + TON tools for production.
  */
-import type { AgentContext } from "./types.js";
+import type { AgentContext } from "./types";
 
-export type { AgentContext } from "./types.js";
+export type { AgentContext } from "./types";
 
 export async function runAgent(
   userMessage: string,

@@ -3,8 +3,8 @@
  * Amounts in TON (number). Daily spent tracked per UTC day.
  */
 
-import { getRedisClient, redisKey } from "./redis.js";
-import type { PendingTransfer } from "./pending-transfer-store.js";
+import { getRedisClient, redisKey } from "./redis";
+import type { PendingTransfer } from "./pending-transfer-store";
 
 export interface SpendingLimits {
   perTransferMaxTon?: number;

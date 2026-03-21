@@ -1,5 +1,5 @@
 import { randomBytes, pbkdf2Sync } from "node:crypto";
-import { getRedisClient, redisKey } from "./redis.js";
+import { getRedisClient, redisKey } from "./redis";
 
 const PIN_SALT_BYTES = 16;
 const PIN_ITERATIONS = 100_000;

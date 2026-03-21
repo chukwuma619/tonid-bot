@@ -3,8 +3,8 @@
  * privateKeyHex is encrypted at rest when ENCRYPTION_KEY is set.
  */
 
-import { getRedisClient, redisKey } from "./redis.js";
-import { encrypt, decrypt, hasEncryptionKey } from "./encryption.js";
+import { getRedisClient, redisKey } from "./redis";
+import { encrypt, decrypt, hasEncryptionKey } from "./encryption";
 
 export interface StoredAccount {
   address: string;

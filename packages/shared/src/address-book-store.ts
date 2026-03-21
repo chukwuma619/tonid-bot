@@ -3,7 +3,7 @@
  * Used for "Send 10 TON to Exchange" by resolving "Exchange" to the saved address.
  */
 
-import { getRedisClient, redisKey } from "./redis.js";
+import { getRedisClient, redisKey } from "./redis";
 
 export interface AddressBookEntry {
   label: string;

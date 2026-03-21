@@ -1,8 +1,8 @@
 import { Address, internal } from "@ton/core";
 import { keyPairFromSeed } from "@ton/crypto";
 import { WalletContractV4 } from "@ton/ton";
-import type { PendingTransfer } from "./pending-transfer-store.js";
-import { getTonClientInstance } from "./ton-client.js";
+import type { PendingTransfer } from "./pending-transfer-store";
+import { getTonClientInstance } from "./ton-client";
 
 /** Default wallet_id for V4R2 (must match create-account). */
 const WALLET_ID = 0x29a9a317;
