@@ -384,6 +384,18 @@ export function run(bot: Bot): void {
         "• **Address:**\n`" +
         account.address +
         "`\n\n" +
+        "**What you can do**\n" +
+        "• Manage TON here: balance, send, receive, and recent activity.\n" +
+        "• Open **/menu** for shortcuts — or type what you want in chat and the assistant will help when it's available.\n" +
+        "• Saved addresses, PIN, and spending limits live under **Settings** in the menu.\n" +
+        "• You confirm every outgoing transfer; nothing sends without you.\n\n" +
+        "**Examples** (when the assistant is on — try your own wording too)\n" +
+        "• `What's my balance?` — `Show my address`\n" +
+        "• `Send 50 TON to UQ...` — paste a full TON address (starts with UQ/EQ; any amount works)\n" +
+        "• `Send 1 TON to Mom` — after you save a label in the address book\n" +
+        "• `Send $20 worth of TON to UQ...` — fiat amount, converted at the current price\n" +
+        "• `Save my exchange as UQ...` — give a short name to an address\n" +
+        "• `Show my recent transactions` — history of outgoing sends\n\n" +
         "Use **/menu** for Balance, Send, History, Settings.",
       { parse_mode: "Markdown" }
     );
