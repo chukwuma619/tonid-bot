@@ -15,9 +15,9 @@ const sans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "TonID Bot — TON wallet in Telegram",
+  title: "TonID — TON wallet in Telegram",
   description:
-    "Telegram bot for TON: wallet, send, history, address book, PIN, limits, AI assistant, reminders. Built for the Identity Hub TON AI Hackathon.",
+    "Manage TON from Telegram: chat naturally for balance, sends, and contacts, or use the menu. You confirm every transfer. Private chats only.",
 };
 
 export default function RootLayout({

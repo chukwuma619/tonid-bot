@@ -8,28 +8,28 @@ function telegramBotHref(): string | null {
 
 const features = [
   {
-    title: "Wallet & identity",
-    body: "Spin up a TON wallet from Telegram, copy your address, and check TON plus jetton balances.",
+    title: "Ask in plain language",
+    body: "Message the bot the way you’d text a friend—check your balance, send TON, add a saved address, or tweak limits. The assistant figures out what you mean and walks you through the steps.",
   },
   {
-    title: "Send & explore",
-    body: "Send to any address or saved contact. History links out to the explorer so you can verify every tx.",
+    title: "You confirm every send",
+    body: "Nothing goes on-chain until you say so. You’ll see the details first, then confirm (and use your PIN if you turned it on). Spending limits and safety checks still apply.",
   },
   {
-    title: "Address book",
-    body: "Label addresses—exchange, friend, cold storage—and send by name instead of pasting long strings.",
+    title: "Wallet, balance & activity",
+    body: "Create a TON wallet from Telegram, copy your address, see your balance, and review recent activity—without leaving the chat.",
   },
   {
-    title: "Safety controls",
-    body: "Optional PIN, per-transfer and daily limits, whitelist mode, and extra checks on large sends.",
+    title: "Contacts & safety",
+    body: "Save addresses with simple names, send to a label instead of a long string, and use optional PIN, daily caps, and whitelist mode if you want tighter control.",
   },
   {
-    title: "AI assistant",
-    body: 'In DMs, ask in plain language: “What’s my balance?”, “Send 1 TON to…”, “Add Exchange as UQB…”.',
+    title: "Reminders & swaps",
+    body: "Set reminders for things you want to remember—they notify you; they don’t move funds on their own. For token swaps, we’ll point you to a TON exchange and your receive address.",
   },
   {
-    title: "Reminders",
-    body: "Schedule nudges for recurring sends; you confirm each payment yourself when the bot pings you.",
+    title: "Prefer buttons?",
+    body: "You don’t have to chat with the assistant. Open the menu or use classic commands for balance, address, send, history, and settings anytime.",
   },
 ] as const;
 
@@ -76,14 +76,14 @@ export default function Home() {
       <main className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-24">
         <section className="mx-auto max-w-3xl pt-4 text-center sm:pt-10">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-            TON · Telegram · AI
+            TON · Telegram · AI assistant
           </p>
           <h1 className="font-display mt-4 text-4xl font-extrabold leading-[1.08] tracking-tight text-foreground sm:text-5xl sm:leading-[1.05]">
-            Your TON wallet, one chat away
+            Your TON wallet, in the chat you already use
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted">
-            TonID Bot is a direct-message assistant for The Open Network: balances, transfers, an
-            address book, safety limits, and natural-language commands—without leaving Telegram.
+            TonID helps you manage TON from Telegram: talk naturally to check balances, prepare sends,
+            keep an address book, and adjust safety settings—right beside your friends and channels.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             {telegramHref ? (
@@ -97,11 +97,8 @@ export default function Home() {
               </a>
             ) : (
               <p className="max-w-md rounded-2xl border border-dashed border-foreground/18 bg-surface px-5 py-4 text-sm text-muted">
-                Set{" "}
-                <code className="rounded bg-foreground/8 px-1.5 py-0.5 text-foreground">
-                  NEXT_PUBLIC_TELEGRAM_BOT_USERNAME
-                </code>{" "}
-                in your env to show a live “Open in Telegram” button.
+                Telegram button coming soon—open the bot from your deploy settings once the link is
+                configured.
               </p>
             )}
             <a
@@ -114,17 +111,48 @@ export default function Home() {
             </a>
           </div>
           <p className="mt-4 text-xs text-muted">
-            DMs only · Use <code className="rounded bg-foreground/8 px-1 text-foreground">/menu</code> for Balance, Address, Send, History, and Settings
+            Private chats only—the bot isn’t meant for groups. Use the in-chat menu for quick actions
+            if you’d rather tap than type.
           </p>
+        </section>
+
+        <section className="mx-auto mt-16 max-w-3xl rounded-3xl border border-foreground/10 bg-surface/80 px-6 py-8 shadow-sm backdrop-blur-sm sm:mt-20 sm:px-10 sm:py-10">
+          <h2 className="font-display text-center text-xl font-bold text-foreground sm:text-2xl">
+            How it feels to use
+          </h2>
+          <ol className="mt-6 space-y-4 text-left text-sm leading-relaxed text-muted sm:text-base">
+            <li className="flex gap-3">
+              <span className="font-display mt-0.5 shrink-0 font-bold text-accent">1</span>
+              <span>
+                <strong className="text-foreground">You write what you want.</strong> No need to
+                memorize commands—ask for your balance, a transfer, or a new contact in everyday
+                language.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-display mt-0.5 shrink-0 font-bold text-accent">2</span>
+              <span>
+                <strong className="text-foreground">TonID responds with clear next steps.</strong> It
+                pulls the right information and sets things up so you’re never guessing what happened.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-display mt-0.5 shrink-0 font-bold text-accent">3</span>
+              <span>
+                <strong className="text-foreground">Money only moves when you say yes.</strong> Sends
+                always wait for your confirmation (and your PIN, if you use one)—the assistant doesn’t
+                spend on its own.
+              </span>
+            </li>
+          </ol>
         </section>
 
         <section className="mt-20 sm:mt-28">
           <h2 className="font-display text-center text-2xl font-bold text-foreground sm:text-3xl">
-            What you get
+            What you can do
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-center text-muted">
-            Everything in one thread: wallet operations, guardrails, and an agent that understands
-            how you talk.
+            Everything below is available from one private chat with the bot.
           </p>
           <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f) => (
@@ -139,33 +167,11 @@ export default function Home() {
           </ul>
         </section>
 
-        <section className="mt-16 rounded-3xl border border-foreground/10 bg-surface p-8 shadow-sm sm:mt-20 sm:p-10">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <h2 className="font-display text-xl font-bold text-foreground sm:text-2xl">
-                Built for the Identity Hub TON AI Hackathon
-              </h2>
-              <p className="mt-3 text-muted">
-                TonID pairs a user-facing Telegram wallet with agent-style flows—wallet
-                integrations, payment paths, PIN, limits, and interpreted commands—so TON feels as
-                easy as messaging a friend.
-              </p>
-            </div>
-            <a
-              href="https://identityhub.app/contests/ai-hackathon"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition hover:opacity-90"
-            >
-              Contest details →
-            </a>
-          </div>
-        </section>
 
       </main>
 
       <footer className="relative z-10 border-t border-foreground/10 py-8 text-center text-xs text-muted">
-        TonID Bot · TON on Telegram
+        TonID · TON on Telegram
       </footer>
     </div>
   );
