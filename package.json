@@ -6,7 +6,10 @@
     "build": "pnpm -r run build",
     "dev:website": "pnpm --filter @tonid-bot/website dev",
     "dev:bot": "pnpm --filter @tonid-bot/telegram-bot dev",
-    "lint": "pnpm -r run lint"
+    "lint": "pnpm -r run lint",
+    "start": "pnpm --filter @tonid-bot/website start",
+    "start:website": "pnpm --filter @tonid-bot/website start",
+    "start:bot": "pnpm --filter @tonid-bot/telegram-bot start"
   },
   "devDependencies": {
     "typescript": "^5"

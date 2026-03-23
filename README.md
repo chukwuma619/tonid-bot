@@ -69,6 +69,15 @@ The bot works in **direct messages** only. Use **/menu** for a persistent inline
      Or from `telegram-bot`: `pnpm dev`.  
      Without `TELEGRAM_WEBHOOK_URL`, the bot uses long polling. With it, run the bot behind HTTPS and set the webhook URL (e.g. `https://your-domain.com/webhook`).
 
+## Deploying (Railway / Railpack)
+
+This repo is a **pnpm workspace**. If the platform builds from the **repository root** (no subdirectory), it needs a root-level **`start`** script—otherwise Railpack reports “No start command detected.”
+
+- **Website (Next.js):** root `pnpm start` runs `pnpm --filter @tonid-bot/website start` (after `pnpm build`). Set env (e.g. `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME`) in the Railway service.
+- **Telegram bot:** create a **second** Railway service (or change the start command) and use **`pnpm run start:bot`** as the start command, with the same monorepo root and `pnpm build` so `packages/shared` and `telegram-bot` compile. Set Redis, `TELEGRAM_BOT_TOKEN`, TON, AI, and webhook env vars as in `env.example`.
+
+Alternatively, set **Root Directory** to `website` or `telegram-bot` in the service settings and use each package’s own `start` script—then you don’t rely on the root `start` default.
+
 ## Bot commands
 
 | Command | Description |
