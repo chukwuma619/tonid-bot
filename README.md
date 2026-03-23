@@ -1,114 +1,181 @@
-# tonid-bot
+# TonID (tonid-bot)
 
-Telegram bot for **TON** (The Open Network) with wallet, transfers, and an AI agent — built for the [Identity Hub TON AI Hackathon](https://identityhub.app/contests/ai-hackathon).
+**TonID** is a **user-facing AI assistant** for **TON (The Open Network)** inside **Telegram**: users get a TON wallet, send and receive TON, manage an address book and safety settings, and can drive most flows either through **natural language** (an AI layer with tool calling) or through **menus and slash commands**. Transfers are **confirmation-gated** (and optional PIN / limits)—the assistant helps set things up; it does not silently move funds.
 
-Monorepo: **official website** (Next.js) and **Telegram bot** (GrammY + [Telegram Bot API](https://core.telegram.org/bots/api)). Shared TON client, account, PIN, transfer, and AI agent logic live in `packages/shared`.
+This repository is a **pnpm monorepo**:
 
-## What the bot does
+| Part | Role |
+|------|------|
+| **`telegram-bot`** | Production GrammY bot: DMs, webhooks or long polling, wallet + Redis-backed state. |
+| **`packages/shared`** | TON client (TonCenter), account/PIN/transfers, spending limits, address book, **AI agent** (Vercel AI SDK + tools). |
+| **`website`** | Next.js marketing / landing site (optional public Telegram link via env). |
 
-- **Wallet & identity** — Create a TON wallet from Telegram, get your address, view balance (TON and optionally jetton tokens).
-- **Send TON** — Send TON to any address or to saved contacts. Optional PIN and spending limits for safety.
-- **History & explorer** — Recent transaction history with links to TON explorer (e.g. tonscan.org).
-- **Address book** — Save addresses under labels (e.g. “Exchange”, “Friend”) and send by name.
-- **Safety** — Optional PIN to authorize transfers; per-transfer and daily spending limits; whitelist-only mode; extra confirmation for large sends.
-- **Reminders** — Schedule reminders (e.g. “remind me to send 10 TON every week”); you get a notification and confirm each send yourself.
-- **Natural language** — In DMs you can ask “What’s my balance?”, “Send 1 TON to UQB…”, “Add Exchange as UQB…” and the AI agent interprets and runs the right action.
+Built for the **[Identity Hub TON AI Hackathon](https://identityhub.app/contests/ai-hackathon)** (AI + TON + Telegram).
 
-The bot works in **direct messages** only. Use **/menu** for a persistent inline menu (Balance | Address | Send | History | Settings).
+---
 
-## Structure
+## What it does
 
-| Path | Description |
-|------|-------------|
-| `website` | Next.js app (marketing/official site). No bot webhook here. |
-| `telegram-bot` | Standalone Node bot using [GrammY](https://grammy.dev); webhook or long polling, sends messages via the official Bot API. |
-| `packages/shared` | TON client, account store, PIN store, pending transfers, execute-transfer, create-account, AI agent. Used by the bot (and optionally by the website). |
+- **Wallet** — Create a TON wallet from Telegram ([Wallet V4R2](https://docs.ton.org/standard/wallets/v4)), show address, balance (TON; jettons where supported).
+- **Transfers** — Send to raw addresses or **saved labels**; optional **PIN**, per-transfer / daily **limits**, whitelist mode, extra step for large sends.
+- **History** — Recent sends with links to a TON explorer (configured via `TON_EXPLORER_URL`).
+- **Address book** — Label → address; send by name.
+- **Reminders** — Scheduled **notifications** (no auto-send; user confirms each payment).
+- **Natural language** — In DMs, configured AI (`AI_GATEWAY_API_KEY`) interprets messages and invokes **defined tools** (balance, prepare transfer, limits, etc.). If AI is not configured, the bot tells the user; **/menu** and commands still work.
+- **Website** — Static-friendly Next app for project info and “Open in Telegram” when `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` is set.
 
-## Hackathon context
+**Groups:** wallet actions run in **private chats only** (not in groups).
 
-- **Event:** [Identity Hub TON AI Hackathon](https://identityhub.app/contests/ai-hackathon) — AI agents on TON (Telegram + AI + TON).
-- **Tracks:** Agent Infrastructure (wallet integrations, payment flows) and User-Facing Agents (Telegram bots, AI assistants).
-- This project targets both: a **user-facing** Telegram wallet/assistant with **agent infrastructure** (wallet, transfers, limits, PIN, address book).
+---
+
+## Repository layout
+
+```
+tonid-bot/
+├── telegram-bot/     # GrammY bot entry (Node, Express webhook or polling)
+├── website/          # Next.js app
+├── packages/shared/  # Shared library (TON, stores, agent)
+├── pnpm-workspace.yaml
+└── env.example       # Copy to .env for local or reference for deploy
+```
+
+---
 
 ## Prerequisites
 
 - **Node.js** 18+
-- **pnpm**
-- **Redis** (for account/PIN and state)
-- **Telegram Bot Token** from [@BotFather](https://t.me/BotFather)
-- **AI Gateway API key** (e.g. Anthropic) for the natural-language agent
+- **pnpm** (`corepack enable` or install globally)
+- **Redis** — required for accounts, PIN, pending transfers, and related state
+- **Telegram bot token** — from [@BotFather](https://t.me/BotFather)
+- **AI provider key** — for natural-language mode: set **`AI_GATEWAY_API_KEY`** (see `packages/shared` / Vercel AI SDK usage)
 
-## Setup
+---
 
-1. **Clone and install**
+## Local development
 
-   ```bash
-   git clone <repo-url>
-   cd tonid-bot
-   pnpm install
-   ```
+### 1. Clone and install
 
-2. **Environment**
+```bash
+git clone <your-fork-or-repo-url>
+cd tonid-bot
+pnpm install
+```
 
-   Copy `env.example` to `.env` at the repo root (or into each app that needs it). The Telegram bot reads the same env vars for TON, Redis, and AI; set `TELEGRAM_BOT_TOKEN` and optionally `TELEGRAM_WEBHOOK_URL` for webhook mode.
+### 2. Environment
 
-   **TON setup:** The bot uses [Wallet V4R2](https://docs.ton.org/standard/wallets/v4) and [TonCenter API v2](https://docs.ton.org/develop/dapps/apis/toncenter). Set `TON_RPC_URL` to the JSON-RPC endpoint (e.g. `https://toncenter.com/api/v2/jsonRPC` or `https://testnet.toncenter.com/api/v2/jsonRPC`), `TON_NETWORK` to `mainnet` or `testnet`, and optionally `TON_API_KEY` for rate limits.
+Copy `env.example` to **`.env`** at the **repository root** (the bot and shared code expect the same variables in typical setups):
 
-3. **Run**
+```bash
+cp env.example .env
+```
 
-   - **Website (Next.js)**  
-     ```bash
-     pnpm dev:website
-     ```
-     Or from `website`: `pnpm dev`.
+Edit `.env` and set at least:
 
-   - **Telegram bot**  
-     ```bash
-     pnpm dev:bot
-     ```
-     Or from `telegram-bot`: `pnpm dev`.  
-     Without `TELEGRAM_WEBHOOK_URL`, the bot uses long polling. With it, run the bot behind HTTPS and set the webhook URL (e.g. `https://your-domain.com/webhook`).
+- **`TELEGRAM_BOT_TOKEN`** — from BotFather  
+- **`REDIS_URL`** — e.g. `redis://localhost:6379` or a cloud URL  
+- **`TON_RPC_URL`**, **`TON_NETWORK`**, **`TON_EXPLORER_URL`** — match mainnet or testnet  
+- **`AI_GATEWAY_API_KEY`** — if you want natural-language replies in DMs  
 
-## Deploying (Railway / Railpack)
+Optional: **`TELEGRAM_WEBHOOK_URL`** (HTTPS) for webhook mode; if unset, the bot uses **long polling**.
 
-This repo is a **pnpm workspace**. If the platform builds from the **repository root** (no subdirectory), it needs a root-level **`start`** script—otherwise Railpack reports “No start command detected.”
+For the **website** only, you can add **`NEXT_PUBLIC_TELEGRAM_BOT_USERNAME`** in `website/.env` (username without `@`) so the landing page shows “Open in Telegram.”
 
-- **Website (Next.js):** root `pnpm start` runs `pnpm --filter @tonid-bot/website start` (after `pnpm build`). Set env (e.g. `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME`) in the Railway service.
-- **Telegram bot:** create a **second** Railway service (or change the start command) and use **`pnpm run start:bot`** as the start command, with the same monorepo root and `pnpm build` so `packages/shared` and `telegram-bot` compile. Set Redis, `TELEGRAM_BOT_TOKEN`, TON, AI, and webhook env vars as in `env.example`.
+### 3. Run
 
-Alternatively, set **Root Directory** to `website` or `telegram-bot` in the service settings and use each package’s own `start` script—then you don’t rely on the root `start` default.
+| Goal | Command |
+|------|---------|
+| Next.js (dev) | `pnpm dev:website` or `cd website && pnpm dev` |
+| Telegram bot (dev) | `pnpm dev:bot` or `cd telegram-bot && pnpm dev` |
+| Build everything | `pnpm build` |
 
-## Bot commands
+---
+
+## Deployment
+
+Deploy **two** pieces in production unless you only need one: the **Telegram bot** (always-on Node + Redis) and optionally the **website** (Next.js). Both share **`packages/shared`**, so builds should run from the **monorepo root** with `pnpm install` and `pnpm build` unless you use per-package roots and a custom pipeline.
+
+### Environment variables (production)
+
+Use the same logical variables as `env.example`. Minimum for the **bot**:
+
+| Variable | Purpose |
+|----------|---------|
+| `TELEGRAM_BOT_TOKEN` | Bot token from BotFather |
+| `REDIS_URL` | Production Redis |
+| `TON_RPC_URL` | TonCenter JSON-RPC URL |
+| `TON_NETWORK` | `mainnet` or `testnet` |
+| `TON_EXPLORER_URL` | Explorer base URL for links |
+| `AI_GATEWAY_API_KEY` | Natural-language agent (omit only if you accept degraded DM UX) |
+| `TELEGRAM_WEBHOOK_URL` | Optional; HTTPS URL your bot listens on for webhooks |
+| `TELEGRAM_WEBHOOK_SECRET_TOKEN` | Optional; Telegram webhook secret |
+| `ENCRYPTION_KEY` | Recommended in production (64 hex chars) for key encryption at rest |
+
+For the **website**:
+
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` | Bot username (no `@`) for landing CTA buttons |
+
+### Railway (Railpack)
+
+This repo defines root scripts so Railpack can detect a **`start`** command when the **root** is the service directory:
+
+| Service | Root directory | Build command (typical) | Start command |
+|---------|----------------|-------------------------|---------------|
+| **Website** | `.` (repo root) | `pnpm install && pnpm build` | `pnpm start` (defaults to Next.js `next start`) |
+| **Telegram bot** | `.` (repo root) | same | `pnpm run start:bot` |
+
+Use **two Railway services** from the same GitHub repo: one for the site, one for the bot, with different start commands and the env vars above.
+
+**Watch paths** (optional, to limit redeploys):
+
+- Website: `website/**`, `pnpm-lock.yaml`, `package.json`, `pnpm-workspace.yaml`
+- Bot: `telegram-bot/**`, `packages/shared/**`, same lockfile/workspace files
+
+If you set **Root Directory** to `website` or `telegram-bot` only, use that package’s `build` / `start` and ensure **`packages/shared`** is built first (e.g. custom build: `pnpm install && pnpm --filter @tonid-bot/shared build && pnpm --filter @tonid-bot/website build`).
+
+### Other hosts (Vercel, Fly, Docker, etc.)
+
+- **Website:** Many teams deploy **`website`** as a Next.js app: set project **root** to `website`, install, `pnpm build`, `pnpm start`, and add `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` in the dashboard.  
+- **Bot:** Needs long-running Node + **Redis**; use any VPS, Fly.io, Railway, Render, etc., with `pnpm build` then `pnpm run start:bot` from repo root (or equivalent filtered build).
+
+---
+
+## Root scripts
+
+| Script | Description |
+|--------|-------------|
+| `pnpm build` | Build all workspace packages (`shared`, `telegram-bot`, `website`) |
+| `pnpm dev:website` | Next.js dev server |
+| `pnpm dev:bot` | Bot in dev (tsx) |
+| `pnpm start` | **Production:** start Next.js site (`@tonid-bot/website`) |
+| `pnpm run start:website` | Same as default `start` |
+| `pnpm run start:bot` | **Production:** run compiled bot (`node dist/index.js` after build) |
+| `pnpm lint` | Lint workspace |
+
+---
+
+## Bot commands (reference)
 
 | Command | Description |
 |---------|-------------|
 | `/start` | Create wallet (if none) and show address |
-| `/menu` | Quick menu: Balance, Address, Send, History, Settings (PIN, limits, address book) |
-| `/address` | Show your TON address |
-| `/balance` | Show TON (and optionally jetton) balance |
-| `/history` | Recent transaction history with [View on explorer] per tx |
-| `/addressbook` | List saved addresses (label → TON address) |
-| `/limits` | View spending limits and how much you’ve spent today |
-| `/reminders` | List scheduled reminders |
-| `/setpin` | Set a PIN for authorizing transfers |
-| `/changepin` | Change existing PIN |
+| `/menu` | Balance, Address, Send, History, Settings |
+| `/address` | Show TON address |
+| `/balance` | Balance |
+| `/history` | Recent sends + explorer links |
+| `/addressbook` | Saved labels |
+| `/limits` | Spending limits |
+| `/reminders` | List reminders |
+| `/setpin` / `/changepin` | PIN |
 
-In DMs you can also use natural language (e.g. “What’s my balance?”, “Send 1 TON to UQB…”).
+Natural language works in DMs when AI is configured.
 
-**Settings:** PIN, limits, and address book. **After a transfer:** optional “Send again?” with [Same amount] [Same recipient] [New transfer].
-
-## Scripts (root)
-
-| Script | Description |
-|--------|-------------|
-| `pnpm build` | Build all workspace packages |
-| `pnpm dev:website` | Start Next.js dev server |
-| `pnpm dev:bot` | Start Telegram bot (polling or webhook server) |
-| `pnpm lint` | Lint all packages |
+---
 
 ## References
 
 - [Identity Hub — TON AI Hackathon](https://identityhub.app/contests/ai-hackathon)
-- [GrammY](https://grammy.dev) – bot framework
+- [GrammY](https://grammy.dev)
 - [Telegram Bot API](https://core.telegram.org/bots/api)
-- [TON Documentation](https://docs.ton.org) — Wallet V4, [TonCenter API](https://docs.ton.org/ecosystem/api/toncenter), [SDKs](https://docs.ton.org/develop/dapps/apis/sdk)
+- [TON Docs](https://docs.ton.org) — Wallet V4, [TonCenter API](https://docs.ton.org/ecosystem/api/toncenter)
